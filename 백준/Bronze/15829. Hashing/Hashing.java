@@ -13,7 +13,7 @@ public class Main {
                     .toArray();
 
             for (int i = 0; i < L; i++) {
-                H += (Math.pow(R, i) * intArray[i]) % M;
+                H += ( (Math.pow(R, i) % M)  * intArray[i]) % M;
             }
 
             System.out.println(H % M);

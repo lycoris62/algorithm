@@ -57,7 +57,7 @@ public class Main {
             sb.append(")");
         } else { // 모두 같으면
             // 0이면 0, 1이면 1 출력
-            sb.append(check == 1 ? 1 : 0);
+            sb.append(check);
         }
     }
 }

@@ -31,7 +31,6 @@ public class Main {
             }
         }
 
-        Set<Character> set = new HashSet<>(list);
-        return list.size() == set.size();
+        return list.size() == list.stream().distinct().count();
     }
 }

@@ -1,6 +1,4 @@
-
 import java.util.*;
-import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
 public class Main {
@@ -8,7 +6,7 @@ public class Main {
     static int N, M;
     static int[] arr, li;
     static boolean[] visited;
-    static Set<String> set = new LinkedHashSet<>();
+    static StringBuilder sb = new StringBuilder();
 
     public static void main(String[] args) {
 
@@ -25,19 +23,21 @@ public class Main {
         Arrays.sort(li);
 
         dfs(0, 0);
-        set.forEach(System.out::println);
+        System.out.println(sb);
     }
 
     static void dfs(int depth, int start) {
         if (depth == M) {
-            String str = Arrays.stream(arr).mapToObj(x -> x + " ").collect(Collectors.joining()).trim();
-            set.add(str);
+            Arrays.stream(arr).forEach(x -> sb.append(x).append(" "));
+            sb.append("\n");
             return;
         }
 
+        int before = -1;
         for (int i = start; i < N; i++) {
-            if (visited[i]) continue;
+            if (visited[i] || before == li[i]) continue;
 
+            before = li[i];
             visited[i] = true;
             arr[depth] = li[i];
             dfs(depth + 1, i);

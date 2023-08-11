@@ -1,27 +1,26 @@
-import java.io.*;
+import java.util.Scanner;
 
 public class Main {
-    static Integer[][] dp;
-    static char[] A;
-    static char[] B;
 
-    public static void main(String[] args) throws IOException {
-        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-        A = br.readLine().toCharArray();
-        B = br.readLine().toCharArray();
+    static int[][] dp;
 
-        dp = new Integer[A.length][B.length];
-        System.out.println(LCS(A.length - 1, B.length - 1));
-    }
+    public static void main(String[] args) {
 
-    static int LCS(int x, int y) {
+        Scanner sc = new Scanner(System.in);
 
-        if (x == -1 || y == -1) return 0;
-        if (dp[x][y] == null) {
-            dp[x][y] = 0;
-            if (A[x] == B[y]) dp[x][y] = LCS(x - 1, y - 1) + 1;
-            else dp[x][y] = Math.max(LCS(x, y - 1), LCS(x - 1, y));
+        String first = sc.next();
+        String second = sc.next();
+
+        dp = new int[second.length() + 1][first.length() + 1];
+
+        for (int i = 0; i < second.length(); i++) {
+            for (int j = 0; j < first.length(); j++) {
+                dp[i + 1][j + 1] = first.charAt(j) == second.charAt(i)
+                        ? dp[i][j] + 1
+                        : Math.max(dp[i][j + 1], dp[i + 1][j]);
+            }
         }
-        return dp[x][y];
+
+        System.out.println(dp[second.length()][first.length()]);
     }
 }

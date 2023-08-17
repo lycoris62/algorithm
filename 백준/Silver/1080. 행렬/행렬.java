@@ -29,6 +29,12 @@ public class Main {
             }
         }
 
+        sol();
+        int ans = isCorrect() ? cnt : -1;
+        System.out.println(ans);
+    }
+
+    static void sol() {
         for (int i = 0; i < N - 2; i++) {
             for (int j = 0; j < M - 2; j++) {
                 if (mat[i][j] != res[i][j]) {
@@ -37,7 +43,17 @@ public class Main {
                 }
             }
         }
+    }
 
+    static void change(int n, int m) {
+        for (int i = n; i < n + 3; i++) {
+            for (int j = m; j < m + 3; j++) {
+                mat[i][j] ^= 1;
+            }
+        }
+    }
+
+    static boolean isCorrect() {
         int flag = 0;
         for (int i = 0; i < N; i++) {
             for (int j = 0; j < M; j++) {
@@ -46,19 +62,6 @@ public class Main {
                 }
             }
         }
-
-        if (flag == N * M) {
-            System.out.println(cnt);
-        } else {
-            System.out.println(-1);
-        }
-    }
-
-    static void change(int n, int m) {
-        for (int i = n; i < n + 3; i++) {
-            for (int j = m; j < m + 3; j++) {
-                mat[i][j] = mat[i][j] == 0 ? 1 : 0;
-            }
-        }
+        return flag == N * M;
     }
 }

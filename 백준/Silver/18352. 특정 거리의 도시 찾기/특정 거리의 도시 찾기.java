@@ -5,7 +5,7 @@ public class Main {
 
     static int N, M, K, X;
     static int[] dist;
-    static List<List<Node>> graph = new ArrayList<>();
+    static List<List<Integer>> graph = new ArrayList<>();
     static final int INF = Integer.MAX_VALUE / 2;
 
     public static void main(String[] args) {
@@ -20,7 +20,7 @@ public class Main {
         Arrays.fill(dist, INF);
 
         IntStream.rangeClosed(0, N).forEach(i -> graph.add(new ArrayList<>()));
-        IntStream.range(0, M).forEach(i -> graph.get(sc.nextInt()).add(new Node(sc.nextInt(), 1)));
+        IntStream.range(0, M).forEach(i -> graph.get(sc.nextInt()).add(sc.nextInt()));
 
         dijkstra(X);
 
@@ -33,48 +33,26 @@ public class Main {
     }
 
     static void dijkstra(int start) {
-        Queue<Node> pq = new PriorityQueue<>();
-        pq.add(new Node(start, 0));
+        Queue<int[]> pq = new PriorityQueue<>(Comparator.comparingInt(o -> o[1]));
+        pq.add(new int[]{start, 0});
         dist[start] = 0;
 
         while (!pq.isEmpty()) {
-            Node nowNode = pq.poll();
+            int[] nowNode = pq.poll();
 
-            int now = nowNode.getIndex();
-            int distance = nowNode.getDistance();
+            int now = nowNode[0];
+            int distance = nowNode[1];
 
             if (dist[now] < distance) continue;
 
-            for (Node node : graph.get(now)) {
-                int cost = dist[now] + node.getDistance();
+            for (int next : graph.get(now)) {
+                int cost = dist[now] + 1;
 
-                if (cost < dist[node.getIndex()]) {
-                    dist[node.getIndex()] = cost;
-                    pq.add(new Node(node.getIndex(), cost));
+                if (cost < dist[next]) {
+                    dist[next] = cost;
+                    pq.add(new int[]{next, cost});
                 }
             }
-        }
-    }
-
-    static class Node implements Comparable<Node> {
-        int index, distance;
-
-        public Node(int index, int distance) {
-            this.index = index;
-            this.distance = distance;
-        }
-
-        public int getIndex() {
-            return index;
-        }
-
-        public int getDistance() {
-            return distance;
-        }
-
-        @Override
-        public int compareTo(Node other) {
-            return Integer.compare(this.distance, other.getDistance());
         }
     }
 }

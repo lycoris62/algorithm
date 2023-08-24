@@ -4,9 +4,10 @@ import java.util.stream.IntStream;
 public class Main {
 
     static int N, M, K, X;
-    static int[] dist;
-    static List<List<Integer>> graph = new ArrayList<>();
-    static final int INF = Integer.MAX_VALUE / 2;
+    static int[] distances;
+    static int INF = Integer.MAX_VALUE / 2;
+    static StringBuilder sb = new StringBuilder();
+    static List<List<Node>> graph = new ArrayList<>();
 
     public static void main(String[] args) {
 
@@ -15,44 +16,51 @@ public class Main {
         M = sc.nextInt();
         K = sc.nextInt();
         X = sc.nextInt();
-
-        dist = new int[N + 1];
-        Arrays.fill(dist, INF);
+        
+        distances = new int[N + 1];
+        Arrays.fill(distances, INF);
 
         IntStream.rangeClosed(0, N).forEach(i -> graph.add(new ArrayList<>()));
-        IntStream.range(0, M).forEach(i -> graph.get(sc.nextInt()).add(sc.nextInt()));
+        IntStream.range(0, M).forEach(i -> graph.get(sc.nextInt()).add(new Node(sc.nextInt(), 1)));
 
         dijkstra(X);
+        IntStream.rangeClosed(1, N).filter(i -> distances[i] == K).forEach(i -> sb.append(i).append("\n"));
 
-        long cnt = Arrays.stream(dist).filter(x -> x == K).count();
-        if (cnt == 0) {
-            System.out.println(-1);
-        } else {
-            IntStream.rangeClosed(1, N).filter(i -> dist[i] == K).forEach(System.out::println);
-        }
+        System.out.println(sb.length() == 0 ? -1 : sb);
     }
 
     static void dijkstra(int start) {
-        Queue<int[]> pq = new PriorityQueue<>(Comparator.comparingInt(o -> o[1]));
-        pq.add(new int[]{start, 0});
-        dist[start] = 0;
+        Queue<Node> pq = new PriorityQueue<>();
+        pq.add(new Node(start, 0));
+        distances[start] = 0;
 
         while (!pq.isEmpty()) {
-            int[] nowNode = pq.poll();
+            Node nowNode = pq.poll();
+            int now = nowNode.index;
+            int nowCost = nowNode.cost;
 
-            int now = nowNode[0];
-            int distance = nowNode[1];
+            if (distances[now] < nowCost) continue;
 
-            if (dist[now] < distance) continue;
-
-            for (int next : graph.get(now)) {
-                int cost = dist[now] + 1;
-
-                if (cost < dist[next]) {
-                    dist[next] = cost;
-                    pq.add(new int[]{next, cost});
+            for (Node node : graph.get(now)) {
+                int cost = distances[now] + node.cost;
+                if (cost < distances[node.index]) {
+                    distances[node.index] = cost;
+                    pq.add(new Node(node.index, cost));
                 }
             }
+        }
+    }
+    
+    static class Node implements Comparable<Node> {
+        int index, cost;
+
+        public Node(int index, int cost) {
+            this.index = index;
+            this.cost = cost;
+        }
+
+        public int compareTo(Node other) {
+            return Integer.compare(this.cost, other.cost);
         }
     }
 }

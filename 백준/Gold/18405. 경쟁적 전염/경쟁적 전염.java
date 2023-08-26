@@ -1,5 +1,4 @@
 import java.util.*;
-import java.util.stream.IntStream;
 
 public class Main {
 
@@ -7,7 +6,7 @@ public class Main {
     static int[][] graph;
     static int[] dx = {-1, 1, 0, 0};
     static int[] dy = {0, 0, -1, 1};
-    static List<Queue<Node>> ques = new ArrayList<>();
+    static Queue<Node> q = new LinkedList<>();
 
     public static void main(String[] args) {
 
@@ -15,7 +14,6 @@ public class Main {
         N = sc.nextInt();
         K = sc.nextInt();
         graph = new int[N][N];
-        IntStream.rangeClosed(0, K).forEach(i -> ques.add(new LinkedList<>()));
 
         for (int i = 0; i < N; i++) {
             for (int j = 0; j < N; j++) {
@@ -27,13 +25,18 @@ public class Main {
         X = sc.nextInt();
         Y = sc.nextInt();
 
+        List<Node> temp = new ArrayList<>();
+
         for (int i = 0; i < N; i++) {
             for (int j = 0; j < N; j++) {
                 if (graph[i][j] != 0) {
-                    ques.get(graph[i][j]).add(new Node(i, j, graph[i][j]));
+                    temp.add(new Node(i, j, graph[i][j], 0));
                 }
             }
         }
+
+        Collections.sort(temp);
+        q.addAll(temp);
 
         bfs();
 
@@ -41,43 +44,42 @@ public class Main {
     }
 
     static void bfs() {
-        int time = 0;
-        boolean isFinish = true;
+        while (!q.isEmpty()) {
+            Node nowNode = q.poll();
+            int x = nowNode.x;
+            int y = nowNode.y;
+            int n = nowNode.num;
+            int time = nowNode.time;
 
-        while (time++ < S) {
-            for (Queue<Node> que : ques) {
-                Queue<Node> q = new LinkedList<>(que);
-
-                while (!q.isEmpty()) {
-                    Node nowNode = q.poll();
-                    int x = nowNode.x;
-                    int y = nowNode.y;
-                    int n = nowNode.num;
-
-                    for (int i = 0; i < 4; i++) {
-                        int nx = x + dx[i];
-                        int ny = y + dy[i];
-
-                        if ((0 <= nx && nx < N) && (0 <= ny && ny < N) && (graph[nx][ny] == 0)) {
-                            graph[nx][ny] = n;
-                            ques.get(n).add(new Node(nx, ny, n));
-                            isFinish = false;
-                        }
-                    }
-                }
+            if (time == S) {
+                return;
             }
 
-            if (isFinish || graph[X - 1][Y - 1] != 0) break;
+            for (int i = 0; i < 4; i++) {
+                int nx = x + dx[i];
+                int ny = y + dy[i];
+
+                if ((0 <= nx && nx < N) && (0 <= ny && ny < N) && (graph[nx][ny] == 0)) {
+                    graph[nx][ny] = n;
+                    q.add(new Node(nx, ny, n, time + 1));
+                }
+            }
         }
     }
 
-    static class Node {
-        int x, y, num;
+    static class Node implements Comparable<Node> {
+        int x, y, num, time;
 
-        public Node(int x, int y, int num) {
+        public Node(int x, int y, int num, int time) {
             this.x = x;
             this.y = y;
             this.num = num;
+            this.time = time;
+        }
+
+        @Override
+        public int compareTo(Node o) {
+            return Integer.compare(this.num, o.num);
         }
     }
 }

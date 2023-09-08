@@ -1,50 +1,53 @@
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.StringTokenizer;
+import java.io.*;
+import java.util.*;
 
 public class Main {
-    static int stoi(String s) {
-        return Integer.parseInt(s);
-    }
+	static int stoi(String s) {
+		return Integer.parseInt(s);
+	}
 
-    static int N;
-    static int K;
-    static List<Integer[]> list;
-    static Integer[][] dp;
+	static int N, K;
+	static Integer[][] dp;
+	static Item[] items;
 
-    public static void main(String[] args) throws IOException {
-        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-        StringTokenizer st = new StringTokenizer(br.readLine(), " ");
+	public static void main(String[] args) throws IOException {
+		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+		StringTokenizer st = new StringTokenizer(br.readLine(), " ");
 
-        N = stoi(st.nextToken());
-        K = stoi(st.nextToken());
-        list = new ArrayList<>(N);
-        dp = new Integer[N][K + 1];
+		N = stoi(st.nextToken());
+		K = stoi(st.nextToken());
+		dp = new Integer[N][K + 1];
+		items = new Item[N];
 
-        for (int i = 0; i < N; i++) {
-            st = new StringTokenizer(br.readLine(), " ");
-            list.add(new Integer[]{stoi(st.nextToken()), stoi(st.nextToken())});
-        }
+		for (int i = 0; i < N; i++) {
+			st = new StringTokenizer(br.readLine(), " ");
+			items[i] = new Item(stoi(st.nextToken()), stoi(st.nextToken()));
+		}
 
-        System.out.println(knapsack(N - 1, K));
-    }
+		System.out.println(knapsack(N - 1, K));
+	}
 
-    static int knapsack(int i, int k) {
-        if (i < 0) return 0;
-        if (dp[i][k] == null) {
-            Integer[] integers = list.get(i);
-            int weight = integers[0];
-            int value = integers[1];
+	static int knapsack(int n, int k) {
+		if (k <= 0 || n < 0)
+			return 0;
+		if (dp[n][k] != null)
+			return dp[n][k];
 
-            if (weight > k) {
-                dp[i][k] = knapsack(i - 1, k);
-            } else {
-                dp[i][k] = Math.max(knapsack(i - 1, k), knapsack(i - 1, k - weight) + value);
-            }
-        }
-        return dp[i][k];
-    }
+		Item item = items[n];
+
+		if (item.weight > k) {
+			return dp[n][k] = knapsack(n - 1, k);
+		} else {
+			return dp[n][k] = Math.max(item.value + knapsack(n - 1, k - item.weight), knapsack(n - 1, k));
+		}
+	}
+
+	static class Item {
+		int weight, value;
+
+		public Item(int weight, int value) {
+			this.weight = weight;
+			this.value = value;
+		}
+	}
 }

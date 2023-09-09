@@ -6,8 +6,8 @@ public class Main {
 		return Integer.parseInt(s);
 	}
 
-	static int N, K, res = Integer.MIN_VALUE;
-	static int[] nums;
+	static int N, K, res = Integer.MIN_VALUE / 2;
+	static int[] sums;
 
 	public static void main(String[] args) throws IOException {
 		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
@@ -15,30 +15,18 @@ public class Main {
 
 		N = stoi(st.nextToken());
 		K = stoi(st.nextToken());
-		nums = new int[N];
+		sums = new int[N + 1];
 
 		st = new StringTokenizer(br.readLine(), " ");
-		for (int i = 0; i < N; i++) {
-			nums[i] = stoi(st.nextToken());
+		for (int i = 1; i <= N; i++) {
+			sums[i] = stoi(st.nextToken()) + sums[i - 1];
 		}
 
-		res = Arrays.stream(nums, 0, K).sum();
+		for (int i = K; i <= N; i++) {
+			int gap = sums[i] - sums[i - K];
+			res = Math.max(res, gap);
+		}
 
-		slidingWindow();
 		System.out.println(res);
 	}
-
-	static void slidingWindow() {
-		int sum = 0;
-
-		for (int i = 0; i < N; i++) {
-			sum += nums[i];
-
-			if (i - K >= 0) {
-				sum -= nums[i - K];
-				res = Math.max(res, sum);
-			}
-		}
-	}
 }
-

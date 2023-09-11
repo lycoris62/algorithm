@@ -1,70 +1,44 @@
+import java.util.Arrays;
 import java.util.Scanner;
 
 public class Main {
 
-	static int N, res;
+	static int N;
 	static int[][] graph;
-	static int[] dx = {0, 1, 1};
-	static int[] dy = {1, 0, 1};
+	static int[][][] dp;
 
 	public static void main(String[] args) {
 
 		Scanner sc = new Scanner(System.in);
 		N = sc.nextInt();
-		graph = new int[N][N];
+		graph = new int[N + 1][N + 1];
+		dp = new int[N + 1][N + 1][3];
 
-		for (int i = 0; i < N; i++) {
-			for (int j = 0; j < N; j++) {
+		for (int i = 1; i <= N; i++) {
+			for (int j = 1; j <= N; j++) {
 				graph[i][j] = sc.nextInt();
 			}
 		}
 
-		dfs(0, 1, 0);
-		System.out.println(res);
+		dp[1][2][0] = 1;
+		dp();
+
+		int result = Arrays.stream(dp[N][N]).sum();
+		System.out.println(result);
 	}
 
-	static void dfs(int ox, int oy, int dir) {
-		if (ox == N - 1 && oy == N - 1) {
-			res++;
-			return;
-		}
+	static void dp() {
+		for (int i = 1; i <= N; i++) {
+			for (int j = 1; j <= N; j++) {
+				if (graph[i][j] == 1)
+					continue;
 
-		if (isHorizontalAvailable(ox, oy) && (dir == 0 || dir == 2)) {
-			dfs(ox + dx[0], oy + dy[0], 0);
-		}
+				dp[i][j][0] += dp[i][j - 1][0] + dp[i][j - 1][2];
+				dp[i][j][1] += dp[i - 1][j][1] + dp[i - 1][j][2];
 
-		if (isVerticalAvailable(ox, oy) && (dir == 1 || dir == 2)) {
-			dfs(ox + dx[1], oy + dy[1], 1);
-		}
-
-		if (isDiagonalAvailable(ox, oy)) {
-			dfs(ox + dx[2], oy + dy[2], 2);
-		}
-	}
-
-	static boolean isHorizontalAvailable(int x, int y) {
-		int nx = x + dx[0];
-		int ny = y + dy[0];
-
-		return (0 <= nx && nx < N) && (0 <= ny && ny < N) && (graph[nx][ny] == 0);
-	}
-
-	static boolean isVerticalAvailable(int x, int y) {
-		int nx = x + dx[1];
-		int ny = y + dy[1];
-
-		return (0 <= nx && nx < N) && (0 <= ny && ny < N) && (graph[nx][ny] == 0);
-	}
-
-	static boolean isDiagonalAvailable(int x, int y) {
-		for (int i = 0; i < 3; i++) {
-			int nx = x + dx[i];
-			int ny = y + dy[i];
-			if (!((0 <= nx && nx < N) && (0 <= ny && ny < N) && (graph[nx][ny] == 0))) {
-				return false;
+				if (graph[i - 1][j] == 0 && graph[i][j - 1] == 0)
+					dp[i][j][2] += dp[i - 1][j - 1][0] + dp[i - 1][j - 1][1] + dp[i - 1][j - 1][2];
 			}
 		}
-
-		return true;
 	}
 }

@@ -12,7 +12,7 @@ public class Main {
 		Scanner sc = new Scanner(System.in);
 		N = sc.nextInt();
 		graph = new int[N][N];
-		
+
 		for (int i = 0; i < N; i++) {
 			for (int j = 0; j < N; j++) {
 				graph[i][j] = sc.nextInt();
@@ -29,30 +29,16 @@ public class Main {
 			return;
 		}
 
-		if (dir == 0) {
-			if (isHorizontalAvailable(ox, oy)) {
-				dfs(ox + dx[0], oy + dy[0], 0);
-			}
-			if (isDiagonalAvailable(ox, oy)) {
-				dfs(ox + dx[2], oy + dy[2], 2);
-			}
-		} else if (dir == 1) {
-			if (isVerticalAvailable(ox, oy)) {
-				dfs(ox + dx[1], oy + dy[1], 1);
-			}
-			if (isDiagonalAvailable(ox, oy)) {
-				dfs(ox + dx[2], oy + dy[2], 2);
-			}
-		} else {
-			if (isHorizontalAvailable(ox, oy)) {
-				dfs(ox + dx[0], oy + dy[0], 0);
-			}
-			if (isVerticalAvailable(ox, oy)) {
-				dfs(ox + dx[1], oy + dy[1], 1);
-			}
-			if (isDiagonalAvailable(ox, oy)) {
-				dfs(ox + dx[2], oy + dy[2], 2);
-			}
+		if (isHorizontalAvailable(ox, oy) && (dir == 0 || dir == 2)) {
+			dfs(ox + dx[0], oy + dy[0], 0);
+		}
+
+		if (isVerticalAvailable(ox, oy) && (dir == 1 || dir == 2)) {
+			dfs(ox + dx[1], oy + dy[1], 1);
+		}
+
+		if (isDiagonalAvailable(ox, oy)) {
+			dfs(ox + dx[2], oy + dy[2], 2);
 		}
 	}
 

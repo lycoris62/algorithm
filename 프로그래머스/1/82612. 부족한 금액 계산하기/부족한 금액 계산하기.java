@@ -3,15 +3,9 @@ import java.util.stream.*;
 class Solution {
     public long solution(int price, int money, int count) {
         
-        long total = money;
+        long total = LongStream.rangeClosed(1, count)
+            .reduce(money, (sum, cnt) -> sum -= (price * cnt));
         
-        for (int i = 1; i <= count; i++) {
-            total -= price * i;    
-        }
-        
-        return -total < 0 ? 0 : -total;
-        
-        // return LongStream.rangeClosed(1, count)
-        //     .reduce(-money, (sum, cnt) -> sum += (price * cnt));
+        return total > 0 ? 0 : -total;
     }
 }

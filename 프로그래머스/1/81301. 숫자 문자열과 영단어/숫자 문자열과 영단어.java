@@ -16,7 +16,6 @@ class Solution {
     );
     
     public int solution(String s) {
-        int answer = 0;
         
         for (Map.Entry<String, String> entry : parser.entrySet()) {
             s = s.replace(entry.getKey(), entry.getValue()); // String 은 불변,,, 잊지마 

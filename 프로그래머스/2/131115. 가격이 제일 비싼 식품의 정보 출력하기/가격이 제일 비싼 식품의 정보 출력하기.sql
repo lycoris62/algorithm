@@ -1,13 +1,12 @@
--- 코드를 입력하세요
 SELECT
     *
 FROM
-    FOOD_PRODUCT F1
+    FOOD_PRODUCT
 WHERE
-    F1.PRICE = (
+    PRICE = (
         SELECT
-            MAX(F2.PRICE)
+            MAX(PRICE)
         FROM
-            FOOD_PRODUCT F2
+            FOOD_PRODUCT
     )
 ;

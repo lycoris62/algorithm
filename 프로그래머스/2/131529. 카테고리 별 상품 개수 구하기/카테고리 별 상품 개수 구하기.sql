@@ -4,5 +4,5 @@ SELECT
 FROM
     PRODUCT
 GROUP BY 
-    # LEFT(PRODUCT_CODE, 2)
-    SUBSTRING(PRODUCT_CODE, 1, 2) # 문자열, 시작 인덱스(1부터 시작), 길이
+    CATEGORY
+    # SUBSTRING(PRODUCT_CODE, 1, 2) # 문자열, 시작 인덱스(1부터 시작), 길이

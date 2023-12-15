@@ -2,31 +2,33 @@ import java.util.*;
 
 class Solution {
     
-    int[] nums = new int[10];
+    int[] x = new int[10];
+    int[] y = new int[10];
+    StringBuilder sb = new StringBuilder();
     
     public String solution(String X, String Y) {
+        
         for (int i = 0; i < X.length(); i++) {
             int num = X.charAt(i) - '0';
-            nums[num]++;
+            x[num]++;
         }
         
-        List<Integer> list = new ArrayList<>();
         for (int i = 0; i < Y.length(); i++) {
             int num = Y.charAt(i) - '0';
-            if (nums[num] > 0) {
-                nums[num]--;
-                list.add(num);
-            }
+            y[num]++;
         }
         
-        if (list.isEmpty()) return "-1";
-        long notZeroCount = list.stream().filter(i -> i != 0).count();
-        if (notZeroCount == 0) return "0";
         
-        Collections.sort(list, Comparator.reverseOrder());
-        StringBuilder sb = new StringBuilder();
-        for (int i : list) sb.append(i);
+        for (int i = 9; i >= 0; i--) {
+            int minCount = Math.min(x[i], y[i]);
+            String num = String.valueOf(i).repeat(minCount);
+            sb.append(num);
+        }
         
-        return sb.toString();
+        String result = sb.toString();
+        
+        if (result.isEmpty()) return "-1";
+        if (result.charAt(0) == '0') return "0";
+        return result;
     }
 }

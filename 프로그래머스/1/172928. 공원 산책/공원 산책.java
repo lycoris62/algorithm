@@ -1,7 +1,6 @@
 import java.util.*;
 
 class Solution {
-    int N, M;
     Map<String, int[]> dirMap = Map.of(
     "E", new int[]{0, 1}, 
     "W", new int[]{0, -1}, 
@@ -9,8 +8,8 @@ class Solution {
     "N", new int[]{-1, 0});
     
     public int[] solution(String[] park, String[] routes) {
-        N = park.length;
-        M = park[0].length();
+        int N = park.length;
+        int M = park[0].length();
         Node now = new Node();
         
         for (int i = 0; i < N; i++) {

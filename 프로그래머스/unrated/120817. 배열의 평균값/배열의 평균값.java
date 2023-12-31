@@ -2,8 +2,12 @@ import java.util.*;
 
 class Solution {
     public double solution(int[] numbers) {
-        return Arrays.stream(numbers)
-            .average()
-            .getAsDouble();
+        int sum = 0;
+        
+        for (int num : numbers) {
+            sum += num;
+        }
+        
+        return (double) sum / numbers.length;
     }
 }

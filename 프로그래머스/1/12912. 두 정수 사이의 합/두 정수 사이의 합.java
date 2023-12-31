@@ -1,7 +1,7 @@
-import java.util.stream.*;
-
 class Solution {
     public long solution(int a, int b) {
-        return LongStream.rangeClosed(Math.min(a, b), Math.max(a, b)).reduce(0L, Long::sum);
+        long x = Math.min(a, b);
+        long y = Math.max(a, b);
+        return (y - x + 1) * (x + y) / 2;
     }
 }

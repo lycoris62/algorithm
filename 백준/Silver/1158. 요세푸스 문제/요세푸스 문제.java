@@ -6,9 +6,8 @@ public class Main {
         return Integer.parseInt(s);
     }
 
-    static int N, K, temp = 1;
-    static Queue<Integer> q = new ArrayDeque<>();
-    static List<Integer> ans = new ArrayList<>();
+    static int N, K, idx;
+    static List<Integer> q = new LinkedList<>();
     static StringBuilder sb = new StringBuilder();
 
     public static void main(String[] args) throws IOException {
@@ -22,21 +21,13 @@ public class Main {
             q.add(i);
         }
 
-        while (!q.isEmpty()) {
-            if (temp == K) {
-                ans.add(q.poll());
-                temp = 1;
-                continue;
-            }
-
-            q.add(q.poll());
-            temp++;
-        }
-
         sb.append("<");
-        for (Integer i : ans) {
-            sb.append(i).append(", ");
+
+        while (!q.isEmpty()) {
+            idx = (idx + K - 1) % q.size();
+            sb.append(q.remove(idx)).append(", ");
         }
+
         sb.delete(sb.lastIndexOf(","), sb.length());
         sb.append(">");
 

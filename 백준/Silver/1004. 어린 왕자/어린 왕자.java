@@ -34,14 +34,7 @@ public class Main {
             }
 
             for (Planet planet : planets) {
-                int count = 0;
-                if (planet.isInner(X1, Y1)) {
-                    count++;
-                }
-                if (planet.isInner(X2, Y2)) {
-                    count++;
-                }
-                if (count == 1) {
+                if (planet.isInner(X1, Y1) ^ planet.isInner(X2, Y2)) {
                     ans++;
                 }
             }

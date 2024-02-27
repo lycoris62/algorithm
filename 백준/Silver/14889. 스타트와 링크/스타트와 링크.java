@@ -15,6 +15,12 @@ public class Main {
     }
 
     public static void main(String[] args) throws IOException {
+        input();
+        dfs(0, 0);
+        System.out.println(ans);
+    }
+
+    private static void input() throws IOException {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
         StringTokenizer st = new StringTokenizer(br.readLine());
 
@@ -29,57 +35,46 @@ public class Main {
                 scores[i][j] = score;
             }
         }
-
-        // 1. 조합으로 팀멤버 꾸리기
-        // 2. 팀멤버대로 점수 계산...반대 팀도 구해야됨
-        // 2.1 우선 첫 팀 다 계산하고, visited 처리 안 된거 더하면 될듯
-        // 3. 최솟값 찾기
-
-        dfs(0, 0, 0);
-
-        System.out.println(ans);
     }
 
-    static void dfs(int depth, int total, int start) {
+    static void dfs(int depth, int start) {
         if (depth == N / 2) { // 팀 편성이 완료되면
-
-            int anotherTotal = 0; // 다른 팀의 능력치 합
-
-            for (int i = 0; i < N; i++) {
-                if (!visited[i]) {
-                    for (int j = 0; j < i; j++) {
-                        if (!visited[j]) {
-                            anotherTotal += scores[i][j];
-                            anotherTotal += scores[j][i];
-                        }
-                    }
-                }
-            }
-
-            // 두 팀의 능력치 차 중 최솟값을 저장
-            ans = Math.min(ans, Math.abs(total - anotherTotal));
+            diff(); // 팀 스코어 차이를 계산 후 최솟값 저장 
             return;
         }
 
-        int nextTotal = total;
-
-        for (int i = start; i < N; i++) {
+        for (int i = start; i < N; i++) { // 조합 -> 순서 상관X 
             if (!visited[i]) {
                 visited[i] = true;
-
-                // 지금까지 방문한 팀원 (우리 팀) 스코어 다 합치기
-                for (int j = 0; j < i; j++) {
-                    if (visited[j]) { // 우리 팀이라면
-                        nextTotal += scores[j][i];
-                        nextTotal += scores[i][j];
-                    }
-                }
-
-                dfs(depth + 1, nextTotal, i + 1);
-
+                dfs(depth + 1, i + 1);
                 visited[i] = false;
-                nextTotal = total;
             }
         }
+    }
+
+    static void diff() {
+        int teamStartScore = 0;
+        int teamLinkScore = 0;
+
+        for (int nowPerson = 0; nowPerson < N; nowPerson++) {
+            boolean isNowTeamStart = visited[nowPerson];
+
+            for (int prevPerson = 0; prevPerson < nowPerson; prevPerson++) {
+                boolean isPrevTeamStart = visited[prevPerson];
+
+                if (isNowTeamStart == isPrevTeamStart) {
+                    int tempScore = scores[nowPerson][prevPerson] + scores[prevPerson][nowPerson];
+
+                    if (isNowTeamStart) {
+                        teamStartScore += tempScore;
+                    } else {
+                        teamLinkScore += tempScore;
+                    }
+                }
+            }
+        }
+
+        int scoreDiff = Math.abs(teamStartScore - teamLinkScore);
+        ans = Math.min(ans, scoreDiff);
     }
 }

@@ -25,23 +25,20 @@ public class Main {
             nums[i] = stoi(st.nextToken());
         }
 
-        Arrays.sort(nums);
+        bt(0, 0);
 
-        bt(0, 0, 0);
-
-        System.out.println(ans);
+        System.out.println(S == 0 ? ans - 1 : ans);
     }
 
-    static void bt(int depth, int start, int total) {
-        if (total == S && depth > 0) { // 합이 S가 되는 부분순열.
-            ans++;
-        }
-        if (depth == N) { // 끝까지 배열을 돌아도 S보다 작음
+    static void bt(int depth, int total) {
+        if (depth == N) {
+            if (total == S) {
+                ans++;
+            }
             return;
         }
 
-        for (int i = start; i < N; i++) { // 순서가 없는 조합
-            bt(depth + 1, i + 1, total + nums[i]);
-        }
+        bt(depth + 1, total);
+        bt(depth + 1, total + nums[depth]);
     }
 }

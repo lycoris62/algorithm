@@ -1,48 +1,60 @@
-import java.io.BufferedReader;
-import java.io.InputStreamReader;
-import java.util.Arrays;
-import java.util.StringTokenizer;
+import java.io.*;
+import java.util.*;
 
 public class Main {
 
-  static int N, resLeft, resRight;
-  static int[] arr;
-
-  public static void main(String[] args) throws Exception {
-
-    BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-
-    N = Integer.parseInt(br.readLine());
-    arr = new int[N];
-
-    StringTokenizer st = new StringTokenizer(br.readLine(), " ");
-    for (int i = 0; i < N; i++) {
-      arr[i] = Integer.parseInt(st.nextToken());
+    static int stoi(String s) {
+        return Integer.parseInt(s);
     }
 
-    Arrays.sort(arr);
+    static int N;
+    static int left, right;
+    static int leftAns, rightAns;
+    static int[] arr;
 
-    int left = resLeft = 0;
-    int right = resRight = N - 1;
+    public static void main(String[] args) throws IOException {
+        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+        StringTokenizer st = new StringTokenizer(br.readLine());
 
-    while (left < right) {
-      int sum = arr[left] + arr[right];
+        N = stoi(st.nextToken());
+        arr = new int[N];
 
-      if (sum == 0) {
-        resLeft = left;
-        resRight = right;
-        break;
-      }
+        st = new StringTokenizer(br.readLine());
+        for (int i = 0; i < N; i++) {
+            arr[i] = stoi(st.nextToken());
+        }
 
-      if (Math.abs(arr[resRight] + arr[resLeft]) > Math.abs(sum)) {
-        resRight = right;
-        resLeft = left;
-      }
+        Arrays.sort(arr);
 
-      if (sum < 0) left++;
-      else right--;
+        left = leftAns = 0;
+        right = rightAns = N - 1;
+
+        // 0에 가장 가까운 용액 -> 0 이상이면서 가장 작은 수 찾기 -> lower bound
+        // 가 아니라 투 포인터였음...
+
+        while (left < right) {
+            int mid = (left + right) / 2;
+            int total = arr[right] + arr[left];
+
+            if (total == 0) { // 0에 가까운 수를 찾는 것이므로 0이면 바로 리턴
+                leftAns = left;
+                rightAns = right;
+                break;
+            }
+
+            // 지금까지 찾은 것보다 더 0에 가까우면 각각 용액값 저장
+            if (Math.abs(arr[leftAns] + arr[rightAns]) > Math.abs(total)) {
+                leftAns = left;
+                rightAns = right;
+            }
+
+            if (total > 0) {
+                right--;
+            } else {
+                left++;
+            }
+        }
+
+        System.out.println(arr[leftAns] + " " + arr[rightAns]);
     }
-
-    System.out.println(arr[resLeft] + " " + arr[resRight]);
-  }
 }

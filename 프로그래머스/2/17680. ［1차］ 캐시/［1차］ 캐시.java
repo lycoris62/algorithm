@@ -2,8 +2,8 @@ import java.util.*;
 
 class Solution {
     public int solution(int cacheSize, String[] cities) {
-        int answer = 0;
-        Queue<String> q = new ArrayDeque<>(cacheSize);
+        int totalTime = 0;
+        Queue<String> cache = new ArrayDeque<>(cacheSize);
         
         if (cacheSize == 0) {
             return cities.length * 5;
@@ -12,20 +12,19 @@ class Solution {
         for (String city : cities) {
             city = city.toLowerCase();
             
-            if (q.contains(city)) {
-                answer += 1;
-                q.remove(city);
-                q.add(city);
+            if (cache.remove(city)) {
+                totalTime += 1;
+                cache.add(city);
                 continue;
             }
-
-            if (q.size() >= cacheSize) {
-                q.poll();
+            
+            if (cache.size() >= cacheSize) {
+                cache.poll();
             }
-            answer += 5;
-            q.add(city);
+            totalTime += 5;
+            cache.add(city);
         }
         
-        return answer;
+        return totalTime;
     }
 }

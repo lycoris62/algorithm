@@ -1,17 +1,17 @@
 class Solution {
-    
-    private final long OP = 1_234_567;
-    private long[] dp;
-    
     public long solution(int n) {
-        long answer = 0;
+        // DP
+        // 특정 칸에 도달하는 경우의 수는, 그 칸의 1칸 전 경우의 수 + 2칸 전 경우의 수
+        // y(x) = y(x-1) + y(x-2)
+        // 초기값은 y(1) = 1, y(2) = 2 (2, 1+1)
         
-        dp = new long[n + 1];
-        dp[0] = dp[1] = 1L;
+        int[] dp = new int[Math.max(2, n) + 1];
+        dp[1] = 1;
+        dp[2] = 2;
         
-        for (int i = 2; i <= n; i++) {
+        for (int i = 3; i <= n; i++) {
             dp[i] = dp[i - 1] + dp[i - 2];
-            dp[i] %= OP;
+            dp[i] %= 1234567;
         }
         
         return dp[n];

@@ -7,9 +7,7 @@ public class Main {
         return Integer.parseInt(s);
     }
 
-    static int N;
-    static int left, right;
-    static int leftAns, rightAns;
+    static int N, leftIdx, leftAnswerIdx, rightIdx, rightAnswerIdx, minGap;
     static int[] arr;
 
     public static void main(String[] args) throws IOException {
@@ -26,35 +24,27 @@ public class Main {
 
         Arrays.sort(arr);
 
-        left = leftAns = 0;
-        right = rightAns = N - 1;
+        leftIdx = leftAnswerIdx = 0;
+        rightIdx = rightAnswerIdx = N - 1;
+        minGap = Integer.MAX_VALUE;
 
-        // 0에 가장 가까운 용액 -> 0 이상이면서 가장 작은 수 찾기 -> lower bound
-        // 가 아니라 투 포인터였음...
+        while (leftIdx < rightIdx) {
+            int nowSum = arr[rightIdx] + arr[leftIdx];
+            int nowGap = Math.abs(nowSum);
 
-        while (left < right) {
-            int mid = (left + right) / 2;
-            int total = arr[right] + arr[left];
-
-            if (total == 0) { // 0에 가까운 수를 찾는 것이므로 0이면 바로 리턴
-                leftAns = left;
-                rightAns = right;
-                break;
+            if (nowGap < minGap) {
+                minGap = nowGap;
+                leftAnswerIdx = leftIdx;
+                rightAnswerIdx = rightIdx;
             }
 
-            // 지금까지 찾은 것보다 더 0에 가까우면 각각 용액값 저장
-            if (Math.abs(arr[leftAns] + arr[rightAns]) > Math.abs(total)) {
-                leftAns = left;
-                rightAns = right;
-            }
-
-            if (total > 0) {
-                right--;
+            if (nowSum > 0) {
+                rightIdx--;
             } else {
-                left++;
+                leftIdx++;
             }
         }
 
-        System.out.println(arr[leftAns] + " " + arr[rightAns]);
+        System.out.println(arr[leftAnswerIdx] + " " + arr[rightAnswerIdx]);
     }
 }

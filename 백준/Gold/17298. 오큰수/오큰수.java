@@ -9,7 +9,7 @@ public class Main {
 
     static int N;
     static int[] arr, answer;
-    static Stack<Integer> stack = new Stack<>();
+    static Deque<Integer> stack = new ArrayDeque<>();
     static StringBuilder sb = new StringBuilder();
 
     public static void main(String[] args) throws IOException {
@@ -39,14 +39,14 @@ public class Main {
         // ㄴ 스택에서 pop 후 그 인덱스는 현재 값으로 answer에 채우기.
 
         for (int i = 0; i < N; i++) {
-            while (!stack.isEmpty() && arr[stack.peek()] < arr[i]) {
-                answer[stack.pop()] = arr[i];
+            while (!stack.isEmpty() && arr[stack.peekLast()] < arr[i]) {
+                answer[stack.pollLast()] = arr[i];
             }
-            stack.push(i);
+            stack.addLast(i);
         }
 
         while (!stack.isEmpty()) {
-            answer[stack.pop()] = -1;
+            answer[stack.pollLast()] = -1;
         }
 
         for (int x : answer) {

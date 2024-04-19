@@ -1,37 +1,58 @@
 import java.io.*;
-import java.util.Stack;
-import java.util.StringTokenizer;
+import java.util.*;
 
 public class Main {
+
     static int stoi(String s) {
         return Integer.parseInt(s);
     }
 
     static int N;
-    static int[] li;
-    static Stack<Integer> stack;
-    static int[] ans;
+    static int[] arr, answer;
+    static Stack<Integer> stack = new Stack<>();
+    static StringBuilder sb = new StringBuilder();
 
     public static void main(String[] args) throws IOException {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-        BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(System.out));
-        StringTokenizer st = new StringTokenizer(br.readLine(), " ");
+        StringTokenizer st = new StringTokenizer(br.readLine());
 
         N = stoi(st.nextToken());
-        stack = new Stack<>();
-        ans = new int[N];
-        li = new int[N];
-        st = new StringTokenizer(br.readLine(), " ");
-        for (int i = 0; i < N; i++) li[i] = stoi(st.nextToken());
+        arr = new int[N];
+        answer = new int[N];
+
+        st = new StringTokenizer(br.readLine());
+        for (int i = 0; i < N; i++) {
+            arr[i] = stoi(st.nextToken());
+        }
+
+        // 스택 문제 특) 반대로 생각 해야 함
+        // 예제1 기준, 배열은 [3, 5, 2, 7]
+        // 3을 기준으로 3보다 큰 가장 큰 왼쪽 수인 5를 생각할 것이 아니라,
+        // 5에서 왼쪽에 있는 처음 5보다 작은 수를 가져오기.
+
+        // 스택에는 인덱스를 넣는다. 위에서 5를 기준으로 하면, 오큰수가 5가 되는
+        // ㄴ 모든 정답 배열 인덱스에 5를 넣어 주어야 하기 때문.
+
+        // for 문으로 배열을 돌기 -> i는 배열의 인덱스.
+        // 만약 스택이 비어있다면 스택에 인덱스 넣기.
+        // 스택이 있고, 스택의 상단을 확인 후, 현재 값보다 낮으면
+        // ㄴ 스택에서 pop 후 그 인덱스는 현재 값으로 answer에 채우기.
 
         for (int i = 0; i < N; i++) {
-            while (!stack.isEmpty() && li[stack.peek()] < li[i]) ans[stack.pop()] = li[i];
+            while (!stack.isEmpty() && arr[stack.peek()] < arr[i]) {
+                answer[stack.pop()] = arr[i];
+            }
             stack.push(i);
         }
 
-        while (!stack.isEmpty()) ans[stack.pop()] = -1;
+        while (!stack.isEmpty()) {
+            answer[stack.pop()] = -1;
+        }
 
-        for (int x : ans) bw.write(x + " ");
-        bw.close();
+        for (int x : answer) {
+            sb.append(x).append(" ");
+        }
+
+        System.out.println(sb);
     }
 }

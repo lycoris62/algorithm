@@ -9,6 +9,8 @@ public class Main {
 
     static int N, K;
     static List<Country> countryList = new ArrayList<>();
+    static Country answer;
+    static int answerIdx;
 
     public static void main(String[] args) throws IOException {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
@@ -25,26 +27,31 @@ public class Main {
 
         Collections.sort(countryList);
 
-        int rank = 1;
+        countryList.get(0).rank = 1;
 
         for (int i = 1; i < countryList.size(); i++) {
             Country prevCountry = countryList.get(i - 1);
             Country nowCountry = countryList.get(i);
 
-            if (nowCountry.compareTo(prevCountry) != 0) {
-                rank++;
+            if (nowCountry.isSameRank(prevCountry)) {
+                nowCountry.rank = prevCountry.rank;
+            } else {
+                nowCountry.rank = i + 1;
             }
 
             if (nowCountry.num == K) {
-                System.out.println(rank);
-                return;
+                answer = nowCountry;
+                answerIdx = i;
             }
         }
+
+//        System.out.println(answer.rank);
+        System.out.println(countryList.get(answerIdx).rank);
     }
 
     static class Country implements Comparable<Country> {
 
-        int num, gold, silver, bronze;
+        int num, gold, silver, bronze, rank;
 
         public Country(int num, int gold, int silver, int bronze) {
             this.num = num;
@@ -61,6 +68,10 @@ public class Main {
                 return Integer.compare(o.silver, this.silver);
             }
             return Integer.compare(o.gold, this.gold);
+        }
+
+        public boolean isSameRank(Country o) {
+            return this.gold == o.gold && this.silver == o.silver && this.bronze == o.bronze;
         }
     }
 }

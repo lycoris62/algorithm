@@ -2,52 +2,45 @@ import java.io.*;
 import java.util.*;
 
 public class Main {
-	static int stoi(String s) {
-		return Integer.parseInt(s);
-	}
+    static int stoi(String s) {
+        return Integer.parseInt(s);
+    }
 
-	static int N, K;
-	static Integer[][] dp;
-	static Item[] items;
+    static int N, K;
+    static int[] V, W;
+    static Integer[][] dp;
 
-	public static void main(String[] args) throws IOException {
-		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-		StringTokenizer st = new StringTokenizer(br.readLine(), " ");
+    public static void main(String[] args) throws IOException {
+        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+        StringTokenizer st = new StringTokenizer(br.readLine());
 
-		N = stoi(st.nextToken());
-		K = stoi(st.nextToken());
-		dp = new Integer[N][K + 1];
-		items = new Item[N];
+        N = stoi(st.nextToken());
+        K = stoi(st.nextToken());
 
-		for (int i = 0; i < N; i++) {
-			st = new StringTokenizer(br.readLine(), " ");
-			items[i] = new Item(stoi(st.nextToken()), stoi(st.nextToken()));
-		}
+        dp = new Integer[N][K + 1];
+        V = new int[N];
+        W = new int[N];
 
-		System.out.println(knapsack(N - 1, K));
-	}
+        for (int i = 0; i < N; i++) {
+            st = new StringTokenizer(br.readLine());
+            W[i] = stoi(st.nextToken());
+            V[i] = stoi(st.nextToken());
+        }
 
-	static int knapsack(int n, int k) {
-		if (k <= 0 || n < 0)
-			return 0;
-		if (dp[n][k] != null)
-			return dp[n][k];
+        System.out.println(dp(N - 1, K));
+    }
 
-		Item item = items[n];
+    static int dp(int i, int k) {
+        if (i < 0 || k <= 0) {
+            return 0;
+        }
 
-		if (item.weight > k) {
-			return dp[n][k] = knapsack(n - 1, k);
-		} else {
-			return dp[n][k] = Math.max(item.value + knapsack(n - 1, k - item.weight), knapsack(n - 1, k));
-		}
-	}
+        if (dp[i][k] != null) {
+            return dp[i][k];
+        }
 
-	static class Item {
-		int weight, value;
-
-		public Item(int weight, int value) {
-			this.weight = weight;
-			this.value = value;
-		}
-	}
+        return dp[i][k] = k - W[i] >= 0
+                ? Math.max(dp(i - 1, k - W[i]) + V[i], dp(i - 1, k))
+                : dp(i - 1, k);
+    }
 }

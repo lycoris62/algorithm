@@ -1,65 +1,58 @@
 import java.io.*;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.StringTokenizer;
+import java.util.*;
 
 public class Main {
     static int stoi(String s) {
         return Integer.parseInt(s);
     }
 
-    static int N;
-    static int M;
-    static List<int[]> apps;
+    static int N, M;
+    static int[] memories, costs;
     static int[][] dp;
-    static int ans = Integer.MAX_VALUE;
-    static int maxCost;
+    static int answer = Integer.MAX_VALUE;
 
     public static void main(String[] args) throws IOException {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-        StringTokenizer st = new StringTokenizer(br.readLine(), " ");
+        StringTokenizer st = new StringTokenizer(br.readLine());
 
         N = stoi(st.nextToken());
         M = stoi(st.nextToken());
-        apps = new ArrayList<>();
-        maxCost = 100 * N;
-        dp = new int[N][maxCost + 1];
-        
-        st = new StringTokenizer(br.readLine(), " ");
-        while (st.hasMoreTokens()) apps.add(new int[]{stoi(st.nextToken()), 0});
-        st = new StringTokenizer(br.readLine(), " ");
-        for (int i = 0; i < N; i++) apps.get(i)[1] = stoi(st.nextToken());
 
-//        for (int[] app : apps) {
-//            System.out.println(app[0] + ", " + app[1]);
-//        }
+        memories = new int[N];
+        costs = new int[N];
+        dp = new int[N][100 * N + 1];
+
+        st = new StringTokenizer(br.readLine());
+        for (int i = 0; i < N; i++) {
+            memories[i] = stoi(st.nextToken());
+        }
+
+        st = new StringTokenizer(br.readLine());
+        for (int i = 0; i < N; i++) {
+            costs[i] = stoi(st.nextToken());
+        }
+
         knapsack();
-        System.out.println(ans);
 
-//        for (int[] row : dp) {
-//            for (Integer i : row) {
-//                System.out.print(i + "\t");
-//            }
-//            System.out.println();
-//        }
+        System.out.println(answer);
     }
 
-    static void knapsack() {
+    private static void knapsack() {
         for (int appIndex = 0; appIndex < N; appIndex++) {
-
-            int[] ints = apps.get(appIndex);
-            int memory = ints[0];
-            int cost = ints[1];
-
-            for (int nowCost = 0; nowCost <= maxCost; nowCost++) {
+            for (int nowCost = 0; nowCost <= 100 * N; nowCost++) {
                 if (appIndex == 0) {
-                    if (nowCost >= cost) dp[appIndex][nowCost] = memory;
+                    if (nowCost - costs[appIndex] >= 0) {
+                        dp[appIndex][nowCost] = memories[appIndex];
+                    }
                 } else {
-                    if (cost > nowCost) dp[appIndex][nowCost] = dp[appIndex - 1][nowCost];
-                    else
-                        dp[appIndex][nowCost] = Math.max(dp[appIndex - 1][nowCost], dp[appIndex - 1][nowCost - cost] + memory);
+                    dp[appIndex][nowCost] = nowCost - costs[appIndex] >= 0
+                            ? Math.max(dp[appIndex - 1][nowCost - costs[appIndex]] + memories[appIndex], dp[appIndex - 1][nowCost])
+                            : dp[appIndex - 1][nowCost];
                 }
-                if (dp[appIndex][nowCost] >= M) ans = Math.min(ans, nowCost);
+
+                if (dp[appIndex][nowCost] >= M) {
+                    answer = Math.min(answer, nowCost);
+                }
             }
         }
     }

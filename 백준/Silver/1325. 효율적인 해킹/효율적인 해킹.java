@@ -7,9 +7,9 @@ public class Main {
     }
 
     static int N, M;
-    static int[] answer;
-    static boolean[] visited;
+    static int[] counts;
     static List<List<Integer>> list = new ArrayList<>();
+
     static StringBuilder sb = new StringBuilder();
 
     public static void main(String[] args) throws IOException {
@@ -19,30 +19,29 @@ public class Main {
         N = stoi(st.nextToken());
         M = stoi(st.nextToken());
 
-        answer = new int[N + 1];
+        counts = new int[N];
 
-        for (int i = 0; i <= N; i++) {
+        for (int i = 0; i < N; i++) {
             list.add(new ArrayList<>());
         }
 
         for (int i = 0; i < M; i++) {
             st = new StringTokenizer(br.readLine());
-            int A = stoi(st.nextToken());
-            int B = stoi(st.nextToken());
+            int A = stoi(st.nextToken()) - 1;
+            int B = stoi(st.nextToken()) - 1;
 
             list.get(A).add(B);
         }
 
-        for (int i = 1; i <= N; i++) {
-            visited = new boolean[N + 1];
+        for (int i = 0; i < N; i++) {
             bfs(i);
         }
 
-        int maxCount = Arrays.stream(answer).max().getAsInt();
+        int maxCount = Arrays.stream(counts).max().getAsInt();
 
-        for (int i = 1; i <= N; i++) {
-            if (answer[i] == maxCount) {
-                sb.append(i).append(" ");
+        for (int i = 0; i < N; i++) {
+            if (counts[i] == maxCount) {
+                sb.append(i + 1).append(" ");
             }
         }
 
@@ -52,6 +51,7 @@ public class Main {
     static void bfs(int start) {
         Queue<Integer> q = new ArrayDeque<>();
         q.add(start);
+        boolean[] visited = new boolean[N];
         visited[start] = true;
 
         while (!q.isEmpty()) {
@@ -59,9 +59,9 @@ public class Main {
 
             for (Integer next : list.get(now)) {
                 if (!visited[next]) {
-                    visited[next] = true;
                     q.add(next);
-                    answer[next]++;
+                    counts[next]++;
+                    visited[next] = true;
                 }
             }
         }

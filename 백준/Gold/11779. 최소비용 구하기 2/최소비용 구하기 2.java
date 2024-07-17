@@ -7,9 +7,8 @@ public class Main {
     }
 
     static int N, M, start, end;
+    static int[] distances, prevPath;
     static List<List<Edge>> graph = new ArrayList<>();
-    static int[] distances;
-    static List<List<Integer>> paths = new ArrayList<>();
     static StringBuilder sb = new StringBuilder();
 
     public static void main(String[] args) throws IOException {
@@ -20,6 +19,7 @@ public class Main {
         M = stoi(br.readLine());
 
         distances = new int[N + 1];
+        prevPath = new int[N + 1];
 
         for (int i = 0; i <= N; i++) {
             graph.add(new ArrayList<>());
@@ -38,25 +38,31 @@ public class Main {
         start = stoi(st.nextToken());
         end = stoi(st.nextToken());
 
-        dijkstra(start, end);
+        dijkstra();
 
-        sb.append(distances[end]).append("\n").append(paths.get(end).size()).append("\n");
-        for (Integer path : paths.get(end)) {
-            sb.append(path).append(" ");
+        sb.append(distances[end]).append("\n");
+
+        Stack<Integer> stack = new Stack<>();
+        stack.push(end);
+
+        while (prevPath[end] != 0) {
+            stack.push(prevPath[end]);
+            end = prevPath[end];
+        }
+
+        sb.append(stack.size()).append("\n");
+        while (!stack.isEmpty()) {
+            sb.append(stack.pop()).append(" ");
         }
 
         System.out.println(sb);
     }
 
-    static void dijkstra(int start, int end) {
+    static void dijkstra() {
         boolean[] visited = new boolean[N + 1];
         Queue<Edge> pq = new PriorityQueue<>();
-        for (int i = 0; i <= N; i++) {
-            paths.add(new ArrayList<>());
-        }
 
         Arrays.fill(distances, Integer.MAX_VALUE);
-        paths.get(start).add(start);
         pq.add(new Edge(start, 0));
         distances[start] = 0;
 
@@ -74,8 +80,7 @@ public class Main {
 
                 if (distances[next.dest] > cost) {
                     distances[next.dest] = cost;
-                    paths.set(next.dest, new ArrayList<>(paths.get(now.dest)));
-                    paths.get(next.dest).add(next.dest);
+                    prevPath[next.dest] = now.dest;
                     pq.add(new Edge(next.dest, cost));
                 }
             }

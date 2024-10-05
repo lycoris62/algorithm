@@ -1,37 +1,40 @@
 import java.io.*;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.StringTokenizer;
+import java.util.*;
 
 public class Main {
+
     static int stoi(String s) {
         return Integer.parseInt(s);
     }
 
-    static int N;
-    static List<Integer> list;
+    static int N, answer;
+    static int[] arr;
     static int[] dp;
 
     public static void main(String[] args) throws IOException {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-        StringTokenizer st = new StringTokenizer(br.readLine(), " ");
+        StringTokenizer st = new StringTokenizer(br.readLine());
 
         N = stoi(st.nextToken());
-        list = new ArrayList<>(N);
+        arr = new int[N];
         dp = new int[N];
-        
-        st = new StringTokenizer(br.readLine(), " ");
-        while (st.hasMoreTokens()) list.add(stoi(st.nextToken()));
+
+        st = new StringTokenizer(br.readLine());
+        for (int i = 0; i < N; i++) {
+            arr[i] = stoi(st.nextToken());
+            dp[i] = 1;
+        }
 
         for (int i = 0; i < N; i++) {
             for (int j = 0; j < i; j++) {
-                if (list.get(j) < list.get(i) && dp[i] < dp[j]) {
-                    dp[i] = dp[j];
+                if (arr[i] > arr[j]) {
+                    dp[i] = Math.max(dp[i], dp[j] + 1);
                 }
             }
-            dp[i] += 1; // 자기 자신
+
+            answer = Math.max(answer, dp[i]);
         }
-        System.out.println(Arrays.stream(dp).max().getAsInt());
+
+        System.out.println(answer);
     }
 }

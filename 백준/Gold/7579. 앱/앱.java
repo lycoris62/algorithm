@@ -2,6 +2,7 @@ import java.io.*;
 import java.util.*;
 
 public class Main {
+
     static int stoi(String s) {
         return Integer.parseInt(s);
     }
@@ -46,8 +47,9 @@ public class Main {
                     }
                 } else {
                     dp[appIndex][nowCost] = nowCost - costs[appIndex] >= 0
-                            ? Math.max(dp[appIndex - 1][nowCost - costs[appIndex]] + memories[appIndex], dp[appIndex - 1][nowCost])
-                            : dp[appIndex - 1][nowCost];
+                        ? Math.max(dp[appIndex - 1][nowCost - costs[appIndex]] + memories[appIndex],
+                        dp[appIndex - 1][nowCost])
+                        : dp[appIndex - 1][nowCost];
                 }
 
                 if (dp[appIndex][nowCost] >= M) {

@@ -2,12 +2,13 @@ import java.io.*;
 import java.util.*;
 
 public class Main {
+
     static int stoi(String s) {
         return Integer.parseInt(s);
     }
 
     static int N, K;
-    static int[] V, W;
+    static Item[] items;
     static Integer[][] dp;
 
     public static void main(String[] args) throws IOException {
@@ -18,29 +19,41 @@ public class Main {
         K = stoi(st.nextToken());
 
         dp = new Integer[N][K + 1];
-        V = new int[N];
-        W = new int[N];
+        items = new Item[N];
 
         for (int i = 0; i < N; i++) {
             st = new StringTokenizer(br.readLine());
-            W[i] = stoi(st.nextToken());
-            V[i] = stoi(st.nextToken());
+            items[i] = new Item(stoi(st.nextToken()), stoi(st.nextToken()));
         }
 
         System.out.println(dp(N - 1, K));
     }
 
-    static int dp(int i, int k) {
-        if (i < 0 || k <= 0) {
+    static int dp(int i, int maxWeight) {
+        if (maxWeight <= 0 || i < 0) {
             return 0;
         }
 
-        if (dp[i][k] != null) {
-            return dp[i][k];
+        if (dp[i][maxWeight] != null) {
+            return dp[i][maxWeight];
         }
 
-        return dp[i][k] = k - W[i] >= 0
-                ? Math.max(dp(i - 1, k - W[i]) + V[i], dp(i - 1, k))
-                : dp(i - 1, k);
+        Item item = items[i];
+
+        if (item.weight > maxWeight) {
+            return dp[i][maxWeight] = dp(i - 1, maxWeight);
+        }
+
+        return dp[i][maxWeight] = Math.max(dp(i - 1, maxWeight), dp(i - 1, maxWeight - item.weight) + item.value);
+    }
+
+    static class Item {
+
+        int weight, value;
+
+        public Item(int weight, int value) {
+            this.weight = weight;
+            this.value = value;
+        }
     }
 }

@@ -1,31 +1,29 @@
 import java.io.BufferedReader;
+import java.io.IOException;
 import java.io.InputStreamReader;
 import java.math.BigInteger;
 
 public class Main {
 
-    static int N;
-    static BigInteger[] memo = new BigInteger[251];
+    static int stoi(String s) {
+        return Integer.parseInt(s);
+    }
 
-    public static void main(String[] args) throws Exception {
+    static String line;
+    static BigInteger[] arr = new BigInteger[251];
 
+    public static void main(String... args) throws IOException {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
 
-        memo[0] = BigInteger.ONE;
-        memo[1] = BigInteger.ONE;
-        memo[2] = BigInteger.valueOf(3);
+        arr[0] = arr[1] = BigInteger.ONE;
+        arr[2] = BigInteger.valueOf(3);
 
         for (int i = 3; i < 251; i++) {
-            memo[i] = memo[i - 1].add(memo[i - 2].multiply(BigInteger.TWO));
+            arr[i] = arr[i - 1].add(arr[i - 2].multiply(BigInteger.TWO));
         }
 
-        while (true) {
-            String str = br.readLine();
-            if (str == null) {
-                break;
-            }
-            N = Integer.parseInt(str);
-            System.out.println(memo[N]);
+        while ((line = br.readLine()) != null) {
+            System.out.println(arr[stoi(line)]);
         }
     }
 }

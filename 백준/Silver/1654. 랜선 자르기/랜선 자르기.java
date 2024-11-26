@@ -1,14 +1,17 @@
-import java.io.*;
-import java.util.*;
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.util.StringTokenizer;
 
 public class Main {
+
+    static int K, N;
+    static int[] lines;
+    static long start = 1L, end = Integer.MAX_VALUE;
 
     static int stoi(String s) {
         return Integer.parseInt(s);
     }
-
-    static int N, K;
-    static int[] lines;
 
     public static void main(String[] args) throws IOException {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
@@ -18,31 +21,31 @@ public class Main {
         N = stoi(st.nextToken());
 
         lines = new int[K];
+
         for (int i = 0; i < K; i++) {
             lines[i] = stoi(br.readLine());
         }
 
-        long left = 1;
-        long right = Arrays.stream(lines).max().getAsInt();
+        while (start < end) {
+            long mid = (start + end + 1) / 2;
 
-        // upper bound
-        while (left <= right) {
-            long mid = (left + right) >>> 1;
+            int count = getCount(mid);
 
-            long count = 0;
-            for (int line : lines) {
-                count += line / mid;
-            }
-
-            // N보다 크면, 더 큼직하게 잘라도 되므로 왼쪽 버리기
-            // N와 같으면, N와 같은 횟수 중에서 더 큼직하게 잘라도 되는 길이 구하기
             if (count >= N) {
-                left = mid + 1;
+                start = mid;
             } else {
-                right = mid - 1;
+                end = mid - 1;
             }
         }
 
-        System.out.println(left - 1); // N를 초과하는 첫 번째 값이므로, -1 해줘서 최댓값 구함
+        System.out.println(start);
+    }
+
+    private static int getCount(long mid) {
+        int count = 0;
+        for (int line : lines) {
+            count += (int) (line / mid);
+        }
+        return count;
     }
 }
